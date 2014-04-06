@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:29:08
+* @Last Modified time: 2014-04-06 22:51:17
 */
 
 #include <stdlib.h>
@@ -16,6 +16,7 @@
 #include "ft_game.h"
 #include "ft_ia.h"
 
+#include <time.h>
 
 int main(int argc, char *argv[])
 {
@@ -46,10 +47,18 @@ int main(int argc, char *argv[])
 		{
 			// end human player turn
 			ft_game_player_turn_end(&game, OWNER_PLAYER_1);
-			// ia plays
+			// ia 1 = player 2 plays
 			game.currentPlayerMovesLeft = 5;
 			ft_ia_play(&game, OWNER_PLAYER_2);
 			ft_game_player_turn_end(&game, OWNER_PLAYER_2);
+			// ia 2 = player 3 plays
+			game.currentPlayerMovesLeft = 5;
+			ft_ia_play(&game, OWNER_PLAYER_3);
+			ft_game_player_turn_end(&game, OWNER_PLAYER_3);
+			// ia 3 = player 4 plays
+			game.currentPlayerMovesLeft = 5;
+			ft_ia_play(&game, OWNER_PLAYER_4);
+			ft_game_player_turn_end(&game, OWNER_PLAYER_4);
 
 			game.turn++;
 			game.currentPlayerMovesLeft = 5;

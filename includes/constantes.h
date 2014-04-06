@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 18:23:54
+* @Last Modified time: 2014-04-06 22:39:44
 */
 
 #ifndef CONSTANTES_H
@@ -55,7 +55,9 @@ typedef enum		e_player
 {
 	OWNER_NONE,
 	OWNER_PLAYER_1,
-	OWNER_PLAYER_2
+	OWNER_PLAYER_2,
+	OWNER_PLAYER_3,
+	OWNER_PLAYER_4
 }					t_player;
 
 typedef enum		e_align

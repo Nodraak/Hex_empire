@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 21:54:48
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:23:58
+* @Last Modified time: 2014-04-06 22:45:31
 */
 
 #include "ft_ia.h"
@@ -17,11 +17,11 @@ void ft_ia_play(t_game *game, t_player player)
 		{
 			if (game->map[j][i].owner == player)
 			{
-				switch (rand()%4)
+				if (rand()%4 == 0)
 				{
 					// up
-					case 0:
-						if (ft_tile_is_able_to_move(game, i, j, i, j-1, player))
+					if (rand()%4 == 0)
+					{	if (ft_tile_is_able_to_move(game, i, j, i, j-1, player))
 						{
 							int ret = ft_tile_move(&game->map[j][i], &game->map[j-1][i], player);
 							// move succesfully
@@ -34,10 +34,9 @@ void ft_ia_play(t_game *game, t_player player)
 								game->currentPlayerMovesLeft--;
 							}
 						}
-						break;
 					// down
-					case 1:
-						if (ft_tile_is_able_to_move(game, i, j, i, j+1, player))
+					}else if (rand()%3 == 0)
+					{	if (ft_tile_is_able_to_move(game, i, j, i, j+1, player))
 						{
 							int ret = ft_tile_move(&game->map[j][i], &game->map[j+1][i], player);
 							// move succesfully
@@ -50,10 +49,9 @@ void ft_ia_play(t_game *game, t_player player)
 								game->currentPlayerMovesLeft--;
 							}
 						}
-						break;
 					// left
-					case 2:
-						if (ft_tile_is_able_to_move(game, i, j, i-1, j, player))
+					}else if (rand()%2 == 0)
+					{	if (ft_tile_is_able_to_move(game, i, j, i-1, j, player))
 						{
 							int ret = ft_tile_move(&game->map[j][i], &game->map[j][i-1], player);
 							// move succesfully
@@ -66,10 +64,9 @@ void ft_ia_play(t_game *game, t_player player)
 								game->currentPlayerMovesLeft--;
 							}
 						}
-						break;
 					// right
-					case 3:
-						if (ft_tile_is_able_to_move(game, i, j, i+1, j, player))
+					}else
+					{	if (ft_tile_is_able_to_move(game, i, j, i+1, j, player))
 						{
 							int ret = ft_tile_move(&game->map[j][i], &game->map[j][i+1], player);
 							// move succesfully
@@ -82,7 +79,7 @@ void ft_ia_play(t_game *game, t_player player)
 								game->currentPlayerMovesLeft--;
 							}
 						}
-						break;
+					}
 				}
 			}
 		}

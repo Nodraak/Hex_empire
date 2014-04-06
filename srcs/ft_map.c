@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 21:50:02
+* @Last Modified time: 2014-04-06 22:48:15
 */
 
 
@@ -34,16 +34,26 @@ void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 			/* units */
 			map[j][i].units = 0;
 
+			/* last move */
+			map[j][i].lastMove = 0;
 		}
 	}
 
-	map[1][1].type = TILE_CAPITAL;
-	map[1][1].owner = OWNER_PLAYER_1;
-	map[1][1].units = 20;
+	map[2][2].type = TILE_CAPITAL;
+	map[2][2].owner = OWNER_PLAYER_1;
+	map[2][2].units = 20;
 
-	map[5][5].type = TILE_CAPITAL;
-	map[5][5].owner = OWNER_PLAYER_2;
-	map[5][5].units = 20;
+	map[2][14].type = TILE_CAPITAL;
+	map[2][14].owner = OWNER_PLAYER_2;
+	map[2][14].units = 20;
+
+	map[10][14].type = TILE_CAPITAL;
+	map[10][14].owner = OWNER_PLAYER_3;
+	map[10][14].units = 20;
+
+	map[10][2].type = TILE_CAPITAL;
+	map[10][2].owner = OWNER_PLAYER_4;
+	map[10][2].units = 20;
 
 }
 

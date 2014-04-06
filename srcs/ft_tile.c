@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:23:32
+* @Last Modified time: 2014-04-06 22:41:57
 */
 
 #include "ft_tile.h"
@@ -184,12 +184,22 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	/* owner */
 	if (tile->owner == OWNER_PLAYER_1)
 	{
-		SDL_SetTextureColorMod(data->mask, 0, 0, 128);
+		SDL_SetTextureColorMod(data->mask, 0, 0, 128); // blue
 		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
 	}
 	if (tile->owner == OWNER_PLAYER_2)
 	{
-		SDL_SetTextureColorMod(data->mask, 128, 0, 0);
+		SDL_SetTextureColorMod(data->mask, 128, 0, 0); // red
+		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
+	}
+	if (tile->owner == OWNER_PLAYER_3)
+	{
+		SDL_SetTextureColorMod(data->mask, 200, 200, 0); // yellow
+		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
+	}
+	if (tile->owner == OWNER_PLAYER_4)
+	{
+		SDL_SetTextureColorMod(data->mask, 128, 0, 128); // magenta
 		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
 	}
 
