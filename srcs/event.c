@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 12:32:14
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 12:35:02
+* @Last Modified time: 2014-04-06 15:01:11
 */
 
 #include "event.h"
@@ -31,8 +31,12 @@ void ft_event_update(int *quit, t_game *game)
 				}
 				break;
 			case SDL_MOUSEMOTION:
-				game->mouse.x = e.motion.x/50;
-				game->mouse.y = e.motion.y/50;
+				game->mouse.x = e.motion.x;
+				game->mouse.y = e.motion.y;
+				break;
+
+			case SDL_MOUSEBUTTONUP:
+				ft_tile_selected_update(game);
 				break;
 
 			default:

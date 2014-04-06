@@ -2,18 +2,22 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:26:22
+* @Last Modified time: 2014-04-06 14:32:10
 */
 
 #ifndef CONSTANTES_H
 #define CONSTANTES_H
 
-/* include */
+/*************
+ *  INCLUDE  *
+ *************/
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-/* define */
+/************
+ *  DEFINE  *
+ ************/
 #define SCREEN_W		800
 #define SCREEN_H		600
 #define FPS				50
@@ -34,7 +38,9 @@
 	#define amask 0xff000000;
 #endif
 
-/* enum */
+/**********
+ *  ENUM  *
+ **********/
 typedef enum		e_tile_type
 {
 	TILE_LAND,
@@ -51,7 +57,10 @@ typedef enum		e_player
 	OWNER_PLAYER_2
 }					t_player;
 
-/* struct */
+/************
+ *  STRUCT  *
+ ************/
+/* sdl data */
 typedef struct 		s_sdl
 {
 	SDL_Window 		*win;
@@ -59,7 +68,7 @@ typedef struct 		s_sdl
 	SDL_Rect		winRect;
 
 }					t_sdl;
-
+/* sprites */
 typedef struct 		s_data
 {
 	SDL_Texture		*green;
@@ -68,20 +77,19 @@ typedef struct 		s_data
 
 	TTF_Font		*font;
 }					t_data;
-
+/* simple vector */
 typedef struct		s_vector
 {
 	int x, y;
 }					t_vector;
-
+/* game data */
 typedef struct		s_game
 {
 	t_vector		mouse;
 	t_vector		selected;
 	int				isATileSelected;
 }					t_game;
-
-
+/* tile data */
 typedef struct		s_tile
 {
 	t_vector		pos;

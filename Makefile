@@ -3,13 +3,13 @@
 NAME = Hex_Empire
 INC_DIR = includes/
 SRCS_DIR = srcs/
-SRCS = ft_sdl.c main.c map.c event.c
+SRCS = ft_sdl.c main.c map.c event.c tile.c
 OBJ = $(SRCS:.c=.o)
 OBJ_DIR = obj/
 INCLUDE = -I/usr/local/include/SDL2
 LIBS = -L/usr/local/lib -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_gfx
 
-BONUS = -O2 -Wswitch-default -Wunreachable-code -Waggregate-return -Wcast-align -Wcast-qual -Wconversion -Winline -Wlong-long -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wredundant-decls -Wreturn-type -Wstrict-prototypes -Wswitch -Wvla
+BONUS = -Wswitch-default -Wunreachable-code -Waggregate-return -Wcast-align -Wcast-qual -Wconversion -Winline -Wlong-long -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wredundant-decls -Wreturn-type -Wstrict-prototypes -Wswitch -Wvla
 
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic -I $(INC_DIR) $(INCLUDE) $(BONUS)

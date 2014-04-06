@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:29:02
+* @Last Modified time: 2014-04-06 15:01:45
 */
 
 
@@ -78,7 +78,7 @@ void ft_map_blit(t_tile map[NB_TILE_Y][NB_TILE_X], t_sdl *sdl, t_data *data)
 				case TILE_LAND:
 					ft_sdl_texture_draw(sdl->ren, data->green, x, y);
 					break;
-				
+
 				default:
 					printf("Erreur switch : case not handled. %s %d\n", __FILE__, __LINE__);
 					break;
@@ -110,15 +110,24 @@ void ft_map_units_blit(TTF_Font *font, SDL_Renderer *ren, t_tile *tile)
 void ft_map_hover_blit(SDL_Renderer *ren, t_game *game)
 {
 	SDL_Rect rect;
-	rect.x = game->mouse.x*50;
-	rect.y = game->mouse.y*50;
+	rect.x = game->mouse.x/50*50;
+	rect.y = game->mouse.y/50*50;
 	rect.w = 50;
 	rect.h = 50;
-
 
 	SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
 	SDL_RenderDrawRect(ren, &rect);
 
+	if (game->isATileSelected)
+	{
+		rect.x = game->selected.x*50;
+		rect.y = game->selected.y*50;
+		rect.w = 50;
+		rect.h = 50;
+
+		SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+		SDL_RenderDrawRect(ren, &rect);
+	}
 }
 
 

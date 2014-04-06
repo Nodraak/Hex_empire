@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:28:28
+* @Last Modified time: 2014-04-06 14:52:16
 */
 
 #include <stdlib.h>
@@ -28,6 +28,12 @@ int main(int argc, char *argv[])
 	ft_sdl_init(&sdl);
 	ft_sdl_data_load(&sdl, &data);
 	ft_map_init(map);
+	
+	game.mouse.x = 0;
+	game.mouse.y = 0;
+	game.selected.x = 0;
+	game.selected.y = 0;
+	game.isATileSelected = 0;
 
 	while (!quit)
 	{
@@ -51,10 +57,16 @@ int main(int argc, char *argv[])
 		if (SDL_GetTicks() < timer + 1000/FPS)
 		{
 			SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
-			printf("frame ok\n");
+			#ifdef FRAME_DEBUG
+				printf("frame ok\n");
+			#endif
 		}
 		else
-			printf("frame is late\n");
+		{
+			#ifdef FRAME_DEBUG
+				printf("frame is late\n");
+			#endif
+		}
 	}
 
 	TTF_CloseFont(data.font);
