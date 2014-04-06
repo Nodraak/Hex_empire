@@ -2,12 +2,12 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 12:32:14
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 15:01:11
+* @Last Modified time: 2014-04-06 17:55:49
 */
 
 #include "event.h"
 
-void ft_event_update(int *quit, t_game *game)
+void ft_event_update(t_game *game)
 {
 	SDL_Event e;
 	
@@ -16,13 +16,13 @@ void ft_event_update(int *quit, t_game *game)
 		switch (e.type)
 		{
 			case SDL_QUIT:
-				*quit = 1;
+				game->quitGame = 1;
 				break;
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym)
 				{
 					case SDLK_ESCAPE:
-						*quit = 1;
+						game->quitGame = 1;
 						break;
 
 					default:

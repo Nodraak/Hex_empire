@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 15:34:35
+* @Last Modified time: 2014-04-06 17:57:31
 */
 
 #include <stdlib.h>
@@ -10,9 +10,22 @@
 
 #include "constantes.h"
 #include "ft_sdl.h"
-#include "map.h"
-#include "tile.h"
-#include "event.h"
+#include "ft_map.h"
+#include "ft_tile.h"
+#include "ft_event.h"
+
+void ft_game_init(t_game *game)
+{
+	game->mouse.x = 0;
+	game->mouse.y = 0;
+
+	game->selected.x = 0;
+	game->selected.y = 0;
+	game->isATileSelected = 0;
+
+	game->turn = 0;
+	game->quitGame = 0;
+}
 
 
 int main(int argc, char *argv[])
@@ -20,25 +33,19 @@ int main(int argc, char *argv[])
 	t_sdl sdl;
 	t_data data;
 	t_game game;
-	int quit = 0;
 	unsigned int timer = 0;
 
 	(void)argc, (void)argv;
 	ft_sdl_init(&sdl);
 	ft_sdl_data_load(&sdl, &data);
 	ft_map_init(game.map);
+	ft_game_init(&game);
 
-	game.mouse.x = 0;
-	game.mouse.y = 0;
-	game.selected.x = 0;
-	game.selected.y = 0;
-	game.isATileSelected = 0;
-
-	while (!quit)
+	while (!game.quitGame)
 	{
 		timer = SDL_GetTicks();
 
-		ft_event_update(&quit, &game);
+		ft_event_update(&game);
 
     	// clear
 		SDL_SetRenderDrawColor(sdl.ren, 0, 0, 0, 255); // black + opaque

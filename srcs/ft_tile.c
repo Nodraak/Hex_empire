@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 16:14:44
+* @Last Modified time: 2014-04-06 17:48:14
 */
 
 #include "tile.h"
@@ -20,8 +20,14 @@ void ft_tile_selected_update(t_game *game)
 	else if ((game->selected.x != game->mouse.x/50 || game->selected.y != game->mouse.y/50)
 		&& game->isATileSelected == 1)
 	{
-		ft_tile_move(&game->map[game->selected.y][game->selected.x],
-						&game->map[game->mouse.y/50][game->mouse.x/50]);
+		int dx = game->mouse.x/50 - game->selected.x;
+		int dy = game->mouse.y/50 - game->selected.y;
+
+		if (dx*dx + dy*dy <= 2*2)
+		{
+			ft_tile_move(&game->map[game->selected.y][game->selected.x],
+							&game->map[game->mouse.y/50][game->mouse.x/50]);
+		}
 
 		game->isATileSelected = 0;
 	}

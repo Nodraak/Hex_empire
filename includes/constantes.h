@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 15:57:15
+* @Last Modified time: 2014-04-06 17:57:21
 */
 
 #ifndef CONSTANTES_H
@@ -18,7 +18,7 @@
 /************
  *  DEFINE  *
  ************/
-#define SCREEN_W		800
+#define SCREEN_W		(800+200)
 #define SCREEN_H		600
 #define FPS				50
 
@@ -91,14 +91,20 @@ typedef struct		s_tile
 	t_tile_type		type;
 	t_player		owner;
 	int				units;	// number of units
+	int				lastMove; // turn when the move occured
 }					t_tile;
 /* game data */
 typedef struct		s_game
 {
 	t_vector		mouse;
+
 	t_vector		selected;
 	int				isATileSelected;
+	
 	t_tile 			map[NB_TILE_Y][NB_TILE_X];
+
+	int				turn;
+	int 			quitGame;
 }					t_game;
 
 
