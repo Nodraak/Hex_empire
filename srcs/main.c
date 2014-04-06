@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:10:21
+* @Last Modified time: 2014-04-06 14:28:28
 */
 
 #include <stdlib.h>
@@ -42,20 +42,19 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(sdl.ren, 128, 128, 128, 0);
 		SDL_RenderFillRect(sdl.ren, &sdl.winRect);
 		// tile
-		ft_map_blit(map, sdl.ren, &data);
+		ft_map_blit(map, &sdl, &data);
 		ft_map_hover_blit(sdl.ren, &game);
-
-		/*SDL_Color black = {0, 0, 0, 0};
-		SDL_Color white = {255, 255, 255, 0};
-		SDL_Surface *surface = TTF_RenderText_Solid(data.font, "42", black);
-		SDL_Texture *tex = SDL_CreateTextureFromSurface(sdl.ren, surface);
-		ft_sdl_texture_draw(sdl.ren, tex, 110, 110);*/
 
 		// flip
 		SDL_RenderPresent(sdl.ren);
 
 		if (SDL_GetTicks() < timer + 1000/FPS)
+		{
 			SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
+			printf("frame ok\n");
+		}
+		else
+			printf("frame is late\n");
 	}
 
 	TTF_CloseFont(data.font);

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:14:52
+* @Last Modified time: 2014-04-06 14:26:22
 */
 
 #ifndef CONSTANTES_H
@@ -40,7 +40,8 @@ typedef enum		e_tile_type
 	TILE_LAND,
 	TILE_SEA,
 	TILE_TOWN,
-	TILE_CAPITAL
+	TILE_CAPITAL,
+	TILE_LAST
 }					t_tile_type;
 
 typedef enum		e_player
@@ -83,7 +84,8 @@ typedef struct		s_game
 
 typedef struct		s_tile
 {
-	t_tile_type		type; // town, capital, land, sea, ...
+	t_vector		pos;
+	t_tile_type		type;
 	t_player		owner;
 	int				units;	// number of units
 }					t_tile;
