@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:01
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:08:13
+* @Last Modified time: 2014-04-06 15:57:16
 */
 
 
@@ -19,12 +19,12 @@ void ft_sdl_init(t_sdl *sdl)
 
 	Uint32 flag = 0;//SDL_WINDOW_FULLSCREEN;
 	SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, flag, &sdl->win, &sdl->ren);
-
 	if (sdl->win == NULL || sdl->ren == NULL)
 	{
 		fprintf(stderr, "Error SDL_CreateWindow() in file %s line %d : %s\n", __FILE__, __LINE__, SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
+	SDL_SetWindowTitle(sdl->win, "Squared Empire - Nodraak");
 
 	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
 	//SDL_RenderSetLogicalSize(sdl->ren, SCREEN_W, SCREEN_H);
@@ -84,6 +84,7 @@ void ft_sdl_data_load(t_sdl *sdl, t_data *data)
 	data->green = ft_sdl_tex_load("data/green.png", sdl->ren);
 	data->blue = ft_sdl_tex_load("data/blue.png", sdl->ren);
 	data->brown = ft_sdl_tex_load("data/brown.png", sdl->ren);
+	data->mask = ft_sdl_tex_load("data/mask.png", sdl->ren);
 
 	data->font = TTF_OpenFont("data/Furmanite.ttf", 20);
  	if (data->font == NULL)

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:32:10
+* @Last Modified time: 2014-04-06 15:57:15
 */
 
 #ifndef CONSTANTES_H
@@ -25,6 +25,7 @@
 #define NB_TILE_X		16
 #define NB_TILE_Y		12
 
+//#define FRAME_DEBUG
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	#define rmask 0xff000000;
@@ -74,6 +75,7 @@ typedef struct 		s_data
 	SDL_Texture		*green;
 	SDL_Texture		*blue;
 	SDL_Texture		*brown;
+	SDL_Texture		*mask;
 
 	TTF_Font		*font;
 }					t_data;
@@ -82,13 +84,6 @@ typedef struct		s_vector
 {
 	int x, y;
 }					t_vector;
-/* game data */
-typedef struct		s_game
-{
-	t_vector		mouse;
-	t_vector		selected;
-	int				isATileSelected;
-}					t_game;
 /* tile data */
 typedef struct		s_tile
 {
@@ -97,6 +92,14 @@ typedef struct		s_tile
 	t_player		owner;
 	int				units;	// number of units
 }					t_tile;
+/* game data */
+typedef struct		s_game
+{
+	t_vector		mouse;
+	t_vector		selected;
+	int				isATileSelected;
+	t_tile 			map[NB_TILE_Y][NB_TILE_X];
+}					t_game;
 
 
 

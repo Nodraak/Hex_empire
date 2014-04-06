@@ -1,3 +1,9 @@
+
+obj/*
+html/*
+latex/*
+
+
 # Object files
 *.o
 *.ko

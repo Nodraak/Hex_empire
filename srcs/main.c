@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 14:52:16
+* @Last Modified time: 2014-04-06 15:34:35
 */
 
 #include <stdlib.h>
@@ -21,14 +21,13 @@ int main(int argc, char *argv[])
 	t_data data;
 	t_game game;
 	int quit = 0;
-	t_tile map[NB_TILE_Y][NB_TILE_X];
 	unsigned int timer = 0;
 
 	(void)argc, (void)argv;
 	ft_sdl_init(&sdl);
 	ft_sdl_data_load(&sdl, &data);
-	ft_map_init(map);
-	
+	ft_map_init(game.map);
+
 	game.mouse.x = 0;
 	game.mouse.y = 0;
 	game.selected.x = 0;
@@ -48,7 +47,7 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(sdl.ren, 128, 128, 128, 0);
 		SDL_RenderFillRect(sdl.ren, &sdl.winRect);
 		// tile
-		ft_map_blit(map, &sdl, &data);
+		ft_map_blit(game.map, &sdl, &data);
 		ft_map_hover_blit(sdl.ren, &game);
 
 		// flip
