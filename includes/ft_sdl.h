@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:15
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-05 18:05:33
+* @Last Modified time: 2014-04-06 12:58:17
 */
 
 #ifndef FT_SDL_H
@@ -20,8 +20,8 @@
 
 /* prototypes */
 void ft_sdl_init(t_sdl *sdl);
-SDL_Texture *ft_sdl_img_one_load(char *path, SDL_Renderer *ren);
-void ft_sdl_img_all_load(t_sdl *sdl, t_img *img);
+SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren);
+void ft_sdl_data_load(t_sdl *sdl, t_data *data);
 
 void ft_sdl_texture_draw(SDL_Renderer *ren, SDL_Texture *tex, int x, int y);
 

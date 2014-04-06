@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:01
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-05 18:22:45
+* @Last Modified time: 2014-04-06 14:08:13
 */
 
 
@@ -10,19 +10,15 @@
 
 void ft_sdl_init(t_sdl *sdl)
 {
+	/* SDL */
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		fprintf(stderr, "Error SDL_Init() in file %s line %d : %s\n", __FILE__, __LINE__, SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-	
-	/*sdl->win = SDL_CreateWindow("Squared empire",
-							SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-							0, 0,
-							SDL_WINDOW_FULLSCREEN_DESKTOP);*/
-
-	SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &sdl->win, &sdl->ren);
+	Uint32 flag = 0;//SDL_WINDOW_FULLSCREEN;
+	SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, flag, &sdl->win, &sdl->ren);
 
 	if (sdl->win == NULL || sdl->ren == NULL)
 	{
@@ -30,10 +26,10 @@ void ft_sdl_init(t_sdl *sdl)
 		exit(EXIT_FAILURE);
 	}
 
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
-	SDL_RenderSetLogicalSize(sdl->ren, SCREEN_W, SCREEN_H);
+	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	//SDL_RenderSetLogicalSize(sdl->ren, SCREEN_W, SCREEN_H);
 
-	/* SDL2 image */
+	/* SDL IMAGE */
 	int flags = IMG_INIT_PNG;
 	int initted = IMG_Init(flags);
 	if ((initted & flags) != flags)
@@ -41,6 +37,16 @@ void ft_sdl_init(t_sdl *sdl)
 		fprintf(stderr, "Error IMG_Init() in file %s line %d : %s\n", __FILE__, __LINE__, IMG_GetError());
 		exit(EXIT_FAILURE);
 	}
+
+	/* SDL TTF */
+	if (TTF_Init() == -1)
+	{
+		fprintf(stderr, "Error TTF_Init() in file %s line %d : %s\n", __FILE__, __LINE__, TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+
+
 
 
 	sdl->winRect.w = SCREEN_W;
@@ -50,7 +56,7 @@ void ft_sdl_init(t_sdl *sdl)
 }
 
 
-SDL_Texture *ft_sdl_img_one_load(char *path, SDL_Renderer *ren)
+SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren)
 {
 	SDL_Surface *ptr = NULL;
 	SDL_Texture *tex = NULL;
@@ -73,11 +79,18 @@ SDL_Texture *ft_sdl_img_one_load(char *path, SDL_Renderer *ren)
 	return tex;
 }
 
-void ft_sdl_img_all_load(t_sdl *sdl, t_img *img)
+void ft_sdl_data_load(t_sdl *sdl, t_data *data)
 {
-	img->green = ft_sdl_img_one_load("green.png", sdl->ren);
-	img->blue = ft_sdl_img_one_load("blue.png", sdl->ren);
-	img->brown = ft_sdl_img_one_load("brown.png", sdl->ren);
+	data->green = ft_sdl_tex_load("data/green.png", sdl->ren);
+	data->blue = ft_sdl_tex_load("data/blue.png", sdl->ren);
+	data->brown = ft_sdl_tex_load("data/brown.png", sdl->ren);
+
+	data->font = TTF_OpenFont("data/Furmanite.ttf", 20);
+ 	if (data->font == NULL)
+ 	{
+		fprintf(stderr, "Error TTF_OpenFont() in file %s line %d : %s\n", __FILE__, __LINE__, TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
 }
 
 void ft_sdl_texture_draw(SDL_Renderer *ren, SDL_Texture *tex, int x, int y)

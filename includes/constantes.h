@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 12:35:18
+* @Last Modified time: 2014-04-06 14:14:52
 */
 
 #ifndef CONSTANTES_H
@@ -11,6 +11,7 @@
 /* include */
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 /* define */
 #define SCREEN_W		800
@@ -34,12 +35,20 @@
 #endif
 
 /* enum */
-typedef enum	e_tile_type
+typedef enum		e_tile_type
 {
-	E_TILE_GREEN,
-	E_TILE_BLUE,
-	E_TILE_BROWN
-}				t_tile_type;
+	TILE_LAND,
+	TILE_SEA,
+	TILE_TOWN,
+	TILE_CAPITAL
+}					t_tile_type;
+
+typedef enum		e_player
+{
+	OWNER_NONE,
+	OWNER_PLAYER_1,
+	OWNER_PLAYER_2
+}					t_player;
 
 /* struct */
 typedef struct 		s_sdl
@@ -50,13 +59,14 @@ typedef struct 		s_sdl
 
 }					t_sdl;
 
-typedef struct 		s_img
+typedef struct 		s_data
 {
 	SDL_Texture		*green;
 	SDL_Texture		*blue;
 	SDL_Texture		*brown;
 
-}					t_img;
+	TTF_Font		*font;
+}					t_data;
 
 typedef struct		s_vector
 {
@@ -73,10 +83,9 @@ typedef struct		s_game
 
 typedef struct		s_tile
 {
-	t_vector		pos;
-	int				value;
-	int				owner;
-	int				status; // town, capital, land, sea, ...
+	t_tile_type		type; // town, capital, land, sea, ...
+	t_player		owner;
+	int				units;	// number of units
 }					t_tile;
 
 

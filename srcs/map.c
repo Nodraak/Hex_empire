@@ -2,16 +2,16 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 12:34:31
+* @Last Modified time: 2014-04-06 14:14:59
 */
 
 
 #include "map.h"
 
-void ft_map_init(t_tile_type map[NB_TILE_Y][NB_TILE_X])
+void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 {
 	int i, j;
-	t_tile_type last = E_TILE_GREEN;
+	t_tile_type last = TILE_LAND;
 
 	for (j = 0; j < NB_TILE_Y; ++j)
 	{
@@ -22,21 +22,28 @@ void ft_map_init(t_tile_type map[NB_TILE_Y][NB_TILE_X])
 			if (random >= 0 && random < 75)
 				;
 			else if (random >= 75 && random < 95)
-				last = E_TILE_GREEN;
+				last = TILE_LAND;
 			else if (random >= 95 && random < 100)
-				last = E_TILE_BLUE;
-			else
-				printf("caca\n");
+				last = TILE_SEA;
 
 			if (random < 10)
-				map[j][i] = E_TILE_BROWN;
+				map[j][i].type = TILE_TOWN;
 			else	
-				map[j][i] = last;
+				map[j][i].type = last;
 		}
 	}
+
+	map[1][1].type = TILE_CAPITAL;
+	map[1][1].owner = OWNER_PLAYER_1;
+	map[1][1].units = 20;
+
+	map[5][5].type = TILE_CAPITAL;
+	map[5][5].owner = OWNER_PLAYER_2;
+	map[5][5].units = 20;
+
 }
 
-void ft_map_blit(t_tile_type map[NB_TILE_Y][NB_TILE_X], SDL_Renderer *ren, t_img *img)
+void ft_map_blit(t_tile map[NB_TILE_Y][NB_TILE_X], SDL_Renderer *ren, t_data *data)
 {
 	int i, j;
 
@@ -47,16 +54,17 @@ void ft_map_blit(t_tile_type map[NB_TILE_Y][NB_TILE_X], SDL_Renderer *ren, t_img
 			int x = i * 50;
 			int y = j * 50;
 
-			switch (map[j][i])
+			switch (map[j][i].type)
 			{
-				case E_TILE_BLUE:
-					ft_sdl_texture_draw(ren, img->blue, x, y);
+				case TILE_SEA:
+					ft_sdl_texture_draw(ren, data->blue, x, y);
 					break;
-				case E_TILE_BROWN:
-					ft_sdl_texture_draw(ren, img->brown, x, y);
+				case TILE_TOWN:
+				case TILE_CAPITAL:
+					ft_sdl_texture_draw(ren, data->brown, x, y);
 					break;
-				case E_TILE_GREEN:
-					ft_sdl_texture_draw(ren, img->green, x, y);
+				case TILE_LAND:
+					ft_sdl_texture_draw(ren, data->green, x, y);
 					break;
 			}
 		}
