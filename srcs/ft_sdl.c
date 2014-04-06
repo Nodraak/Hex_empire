@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:01
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 15:57:16
+* @Last Modified time: 2014-04-06 18:27:07
 */
 
 
@@ -94,14 +94,15 @@ void ft_sdl_data_load(t_sdl *sdl, t_data *data)
 	}
 }
 
-void ft_sdl_texture_draw(SDL_Renderer *ren, SDL_Texture *tex, int x, int y)
+void ft_sdl_texture_blit(SDL_Renderer *ren, SDL_Texture *tex, int x, int y)
 {
 	int w, h;
 	SDL_Rect rect;
 
 	if (SDL_QueryTexture(tex, NULL, NULL, &w, &h) != 0)
 	{
-		// error
+		fprintf(stderr, "Error SDL_QueryTexture() in file %s line %d : %s\n", __FILE__, __LINE__, SDL_GetError());
+		exit(EXIT_FAILURE);
 	}
 
 	rect.w = w;
@@ -112,4 +113,24 @@ void ft_sdl_texture_draw(SDL_Renderer *ren, SDL_Texture *tex, int x, int y)
 	SDL_RenderCopy(ren, tex, NULL, &rect);
 }
 
+
+void ft_sdl_text_blit(SDL_Renderer *ren, TTF_Font *font, char *text, int x, int y,
+						int alignX, int alignY, Uint8 r, Uint8 g, Uint8 b)
+{
+	SDL_Color color = {r, g, b, 0};
+	SDL_Surface *surface = NULL;
+	SDL_Texture *tex = NULL;
+
+	surface = TTF_RenderText_Solid(font, text, color);
+	tex = SDL_CreateTextureFromSurface(ren, surface);
+
+	if (alignX == ALIGN_CENTER)
+		x -= surface->w/2;
+	if (alignY == ALIGN_CENTER)
+		y -= surface->h/2;
+
+	ft_sdl_texture_blit(ren, tex, x, y);
+
+	SDL_FreeSurface(surface);
+}
 

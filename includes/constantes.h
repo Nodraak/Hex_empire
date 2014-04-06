@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 17:57:21
+* @Last Modified time: 2014-04-06 18:23:54
 */
 
 #ifndef CONSTANTES_H
@@ -58,6 +58,12 @@ typedef enum		e_player
 	OWNER_PLAYER_2
 }					t_player;
 
+typedef enum		e_align
+{
+	ALIGN_NONE,
+	ALIGN_CENTER
+}					t_align;
+
 /************
  *  STRUCT  *
  ************/
@@ -104,6 +110,8 @@ typedef struct		s_game
 	t_tile 			map[NB_TILE_Y][NB_TILE_X];
 
 	int				turn;
+	int				currentPlayerMovesLeft;
+
 	int 			quitGame;
 }					t_game;
 

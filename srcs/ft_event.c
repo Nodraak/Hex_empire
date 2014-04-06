@@ -2,10 +2,10 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 12:32:14
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 17:55:49
+* @Last Modified time: 2014-04-06 18:16:28
 */
 
-#include "event.h"
+#include "ft_event.h"
 
 void ft_event_update(t_game *game)
 {
@@ -24,6 +24,9 @@ void ft_event_update(t_game *game)
 					case SDLK_ESCAPE:
 						game->quitGame = 1;
 						break;
+					case SDLK_RETURN:
+						game->currentPlayerMovesLeft = 0;
+						break;
 
 					default:
 						//printf("default : %c\n", e.key.keysym.sym);
@@ -36,7 +39,8 @@ void ft_event_update(t_game *game)
 				break;
 
 			case SDL_MOUSEBUTTONUP:
-				ft_tile_selected_update(game);
+				if (game->mouse.x < 800)
+					ft_tile_selected_update(game);
 				break;
 
 			default:

@@ -3,7 +3,7 @@
 NAME = Hex_Empire
 INC_DIR = includes/
 SRCS_DIR = srcs/
-SRCS = ft_sdl.c main.c map.c event.c tile.c
+SRCS = ft_sdl.c main.c ft_map.c ft_event.c ft_tile.c ft_game.c
 OBJ = $(SRCS:.c=.o)
 OBJ_DIR = obj/
 INCLUDE = -I/usr/local/include/SDL2

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 17:57:31
+* @Last Modified time: 2014-04-06 20:39:03
 */
 
 #include <stdlib.h>
@@ -13,19 +13,8 @@
 #include "ft_map.h"
 #include "ft_tile.h"
 #include "ft_event.h"
+#include "ft_game.h"
 
-void ft_game_init(t_game *game)
-{
-	game->mouse.x = 0;
-	game->mouse.y = 0;
-
-	game->selected.x = 0;
-	game->selected.y = 0;
-	game->isATileSelected = 0;
-
-	game->turn = 0;
-	game->quitGame = 0;
-}
 
 
 int main(int argc, char *argv[])
@@ -45,21 +34,30 @@ int main(int argc, char *argv[])
 	{
 		timer = SDL_GetTicks();
 
+		/***********
+		 *  EVENT  *
+		 ***********/
 		ft_event_update(&game);
 
-    	// clear
-		SDL_SetRenderDrawColor(sdl.ren, 0, 0, 0, 255); // black + opaque
-		SDL_RenderClear(sdl.ren);
-		// bg
-		SDL_SetRenderDrawColor(sdl.ren, 128, 128, 128, 0);
-		SDL_RenderFillRect(sdl.ren, &sdl.winRect);
-		// tile
-		ft_map_blit(game.map, &sdl, &data);
-		ft_map_hover_blit(sdl.ren, &game);
+		// next turn
+		if (game.currentPlayerMovesLeft == 0)
+		{
+			ft_game_player_turn_end(&game, OWNER_PLAYER_1);
+			game.turn++;
+			game.currentPlayerMovesLeft = 5;
 
-		// flip
-		SDL_RenderPresent(sdl.ren);
+			// ia plays
 
+		}
+
+		/**********
+		 *  DRAW  *
+		 **********/
+    	ft_game_draw(&sdl, &data, &game);
+
+		/***************
+		 *  FIXED FPS  *
+		 ***************/
 		if (SDL_GetTicks() < timer + 1000/FPS)
 		{
 			SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
