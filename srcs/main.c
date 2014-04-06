@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 20:39:03
+* @Last Modified time: 2014-04-06 22:29:08
 */
 
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 #include "ft_tile.h"
 #include "ft_event.h"
 #include "ft_game.h"
-
+#include "ft_ia.h"
 
 
 int main(int argc, char *argv[])
@@ -30,6 +30,8 @@ int main(int argc, char *argv[])
 	ft_map_init(game.map);
 	ft_game_init(&game);
 
+	srand(42);
+
 	while (!game.quitGame)
 	{
 		timer = SDL_GetTicks();
@@ -40,14 +42,17 @@ int main(int argc, char *argv[])
 		ft_event_update(&game);
 
 		// next turn
-		if (game.currentPlayerMovesLeft == 0)
+		if (game.currentPlayerMovesLeft <= 0)
 		{
+			// end human player turn
 			ft_game_player_turn_end(&game, OWNER_PLAYER_1);
+			// ia plays
+			game.currentPlayerMovesLeft = 5;
+			ft_ia_play(&game, OWNER_PLAYER_2);
+			ft_game_player_turn_end(&game, OWNER_PLAYER_2);
+
 			game.turn++;
 			game.currentPlayerMovesLeft = 5;
-
-			// ia plays
-
 		}
 
 		/**********

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 18:17:26
+* @Last Modified time: 2014-04-06 21:50:02
 */
 
 
@@ -11,26 +11,18 @@
 void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 {
 	int i, j;
-	t_tile_type last = TILE_LAND;
 
 	for (j = 0; j < NB_TILE_Y; ++j)
 	{
 		for (i = 0; i < NB_TILE_X; ++i)
 		{
 			/* type */
-			int random = rand()%100;
+			map[j][i].type = TILE_LAND;
 
-			if (random >= 0 && random < 75)
-				;
-			else if (random >= 75 && random < 95)
-				last = TILE_LAND;
-			else if (random >= 95 && random < 100)
-				last = TILE_SEA;
-
-			if (random < 10)
-				map[j][i].type = TILE_TOWN;
-			else	
-				map[j][i].type = last;
+			if (rand()%100 < 10)
+				ft_map_init_tile_type_set(map, i, j, TILE_TOWN);
+			if (rand()%100 < 5)
+				ft_map_init_tile_type_set(map, i, j, TILE_SEA);
 
 			/* pos */
 			map[j][i].pos.x = i;
@@ -53,6 +45,31 @@ void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 	map[5][5].owner = OWNER_PLAYER_2;
 	map[5][5].units = 20;
 
+}
+
+void ft_map_init_tile_type_set(t_tile map[NB_TILE_Y][NB_TILE_X], int x, int y, t_tile_type tile)
+{
+	int randomFactor = 30;
+
+	if (x >= 0 && x < NB_TILE_X && y >= 0 && y < NB_TILE_Y
+		&& map[y][x].type != tile)
+	{
+		map[y][x].type = tile;
+
+		// recurs if sea - for creating oceans
+		if (tile == TILE_SEA)
+		{
+			if (rand()%100 < randomFactor)
+				ft_map_init_tile_type_set(map, x-1, y, TILE_SEA);
+			if (rand()%100 < randomFactor)
+				ft_map_init_tile_type_set(map, x+1, y, TILE_SEA);
+			if (rand()%100 < randomFactor)
+				ft_map_init_tile_type_set(map, x, y-1, TILE_SEA);
+			if (rand()%100 < randomFactor)
+				ft_map_init_tile_type_set(map, x, y+1, TILE_SEA);
+
+		}
+	}
 }
 
 void ft_map_blit(t_tile map[NB_TILE_Y][NB_TILE_X], t_sdl *sdl, t_data *data)

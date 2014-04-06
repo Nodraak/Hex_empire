@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 21:35:09
+* @Last Modified time: 2014-04-06 22:23:32
 */
 
 #include "ft_tile.h"
@@ -10,20 +10,10 @@
 
 void ft_tile_selected_update(t_game *game)
 {
-	/* move if :
-		the old and new tiles are !=
-		an old tile is selected
-		the old tile is owned by the player
-		there are units on the old tile
-		the player have non zero moves left
-		the old tile has not moved yet
-	*/
-	if ((game->selected.x != game->mouse.x/50 || game->selected.y != game->mouse.y/50)
-		&& game->isATileSelected == 1
-		&& game->map[game->selected.y][game->selected.x].owner == OWNER_PLAYER_1
-		&& game->map[game->selected.y][game->selected.x].units != 0
-		&& game->currentPlayerMovesLeft > 0
-		&& game->map[game->selected.y][game->selected.x].lastMove < game->turn)
+	
+	if (ft_tile_is_able_to_move(game, game->selected.x, game->selected.y,
+								game->mouse.x/50, game->mouse.y/50, OWNER_PLAYER_1)
+		&& game->isATileSelected == 1)
 	{
 		int dx = game->mouse.x/50 - game->selected.x;
 		int dy = game->mouse.y/50 - game->selected.y;
@@ -31,7 +21,8 @@ void ft_tile_selected_update(t_game *game)
 		if (dx*dx + dy*dy <= 2*2)
 		{
 			int ret = ft_tile_move(&game->map[game->selected.y][game->selected.x],
-							&game->map[game->mouse.y/50][game->mouse.x/50]);
+							&game->map[game->mouse.y/50][game->mouse.x/50],
+							OWNER_PLAYER_1);
 			// move succesfully
 			if (ret == 2)
 				ft_tile_surroundings_try_conquer(game, game->mouse.x/50, game->mouse.y/50, OWNER_PLAYER_1);
@@ -58,6 +49,29 @@ void ft_tile_selected_update(t_game *game)
 	{
 		game->isATileSelected = 0;
 	}
+}
+
+int ft_tile_is_able_to_move(t_game *game, int oldX, int oldY, int newX, int newY, t_player player)
+{
+	/* move if :
+		the old and new tiles are !=
+		the old tile is owned by the player
+		there are units on the old tile
+		the player have non zero moves left
+		the old tile has not moved yet
+		the old tile is on the map
+		the new tile is on teh map
+	*/
+	if ((oldX != newX || oldY != newY)
+		&& game->map[oldY][oldX].owner == player
+		&& game->map[oldY][oldX].units != 0
+		&& game->currentPlayerMovesLeft > 0
+		&& game->map[oldY][oldX].lastMove < game->turn
+		&& oldX >= 0 && oldX < NB_TILE_X && oldY >= 0 && oldY < NB_TILE_Y
+		&& newX >= 0 && newX < NB_TILE_X && newY >= 0 && newY < NB_TILE_Y)
+		return 1;
+	else
+		return 0;
 }
 
 int ft_tile_is_able_to_be_conquered(t_game *game, int x, int y)
@@ -105,24 +119,24 @@ void ft_tile_surroundings_try_conquer(t_game *game, int x, int y, t_player playe
 }
 
 
-int ft_tile_move(t_tile *old, t_tile *new)
+int ft_tile_move(t_tile *old, t_tile *new, t_player player)
 {
 	// conquer new land or move unit
-	if (new->owner == OWNER_NONE || new->owner == OWNER_PLAYER_1)
+	if (new->owner == OWNER_NONE || new->owner == player)
 	{
-		new->owner = OWNER_PLAYER_1;
+		new->owner = player;
 		new->units += old->units;
 		old->units = 0;
 
 		return 2;
 	}
 	// attack
-	else if (new->owner != OWNER_PLAYER_1 && new->owner != OWNER_NONE)
+	else if (new->owner != player && new->owner != OWNER_NONE)
 	{
 		// attack win
 		if (old->units > new->units)
 		{
-			new->owner = OWNER_PLAYER_1;
+			new->owner = player;
 			new->units = old->units - new->units;
 			old->units = 0;
 
@@ -169,6 +183,11 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 
 	/* owner */
 	if (tile->owner == OWNER_PLAYER_1)
+	{
+		SDL_SetTextureColorMod(data->mask, 0, 0, 128);
+		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
+	}
+	if (tile->owner == OWNER_PLAYER_2)
 	{
 		SDL_SetTextureColorMod(data->mask, 128, 0, 0);
 		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
