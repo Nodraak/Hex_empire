@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 18:40:55
+* @Last Modified time: 2014-04-06 21:35:09
 */
 
 #include "ft_tile.h"
@@ -30,8 +30,13 @@ void ft_tile_selected_update(t_game *game)
 
 		if (dx*dx + dy*dy <= 2*2)
 		{
-			if (ft_tile_move(&game->map[game->selected.y][game->selected.x],
-							&game->map[game->mouse.y/50][game->mouse.x/50]))
+			int ret = ft_tile_move(&game->map[game->selected.y][game->selected.x],
+							&game->map[game->mouse.y/50][game->mouse.x/50]);
+			// move succesfully
+			if (ret == 2)
+				ft_tile_surroundings_try_conquer(game, game->mouse.x/50, game->mouse.y/50, OWNER_PLAYER_1);
+			// move but perhaps failed in conquering new tile
+			if (ret)
 			{
 				game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
 				game->currentPlayerMovesLeft--;
@@ -55,6 +60,50 @@ void ft_tile_selected_update(t_game *game)
 	}
 }
 
+int ft_tile_is_able_to_be_conquered(t_game *game, int x, int y)
+{
+	// tile is on map
+	if (x >= 0 && x < NB_TILE_X && y >= 0 && y < NB_TILE_Y)
+	{
+		// tile is empty
+		if (game->map[y][x].units == 0)
+		{
+			// tile is land or sea
+			if (game->map[y][x].type == TILE_LAND || game->map[y][x].type == TILE_SEA)
+			{
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+void ft_tile_surroundings_try_conquer(t_game *game, int x, int y, t_player player)
+{
+	// up line
+	if (ft_tile_is_able_to_be_conquered(game, x-1, y-1))
+		game->map[y-1][x-1].owner = player;
+	if (ft_tile_is_able_to_be_conquered(game, x, y-1))
+		game->map[y-1][x].owner = player;
+	if (ft_tile_is_able_to_be_conquered(game, x+1, y-1))
+		game->map[y-1][x+1].owner = player;
+
+	// left and right
+	if (ft_tile_is_able_to_be_conquered(game, x-1, y))
+		game->map[y][x-1].owner = player;
+	if (ft_tile_is_able_to_be_conquered(game, x+1, y))
+		game->map[y][x+1].owner = player;
+
+	// down line
+	if (ft_tile_is_able_to_be_conquered(game, x-1, y+1))
+		game->map[y+1][x-1].owner = player;
+	if (ft_tile_is_able_to_be_conquered(game, x, y+1))
+		game->map[y+1][x].owner = player;
+	if (ft_tile_is_able_to_be_conquered(game, x+1, y+1))
+		game->map[y+1][x+1].owner = player;
+}
+
 
 int ft_tile_move(t_tile *old, t_tile *new)
 {
@@ -63,10 +112,9 @@ int ft_tile_move(t_tile *old, t_tile *new)
 	{
 		new->owner = OWNER_PLAYER_1;
 		new->units += old->units;
-	
 		old->units = 0;
 
-		return 1;
+		return 2;
 	}
 	// attack
 	else if (new->owner != OWNER_PLAYER_1 && new->owner != OWNER_NONE)
@@ -76,21 +124,21 @@ int ft_tile_move(t_tile *old, t_tile *new)
 		{
 			new->owner = OWNER_PLAYER_1;
 			new->units = old->units - new->units;
-
 			old->units = 0;
+
+			return 2;
 		}
 		// attack lost
 		else
 		{
 			new->units -= old->units;
-
 			old->units = 0;
-		}
 
-		return 1;
+			return 1;
+		}
 	}
 	else
-		printf("dont know what to do 1\n");
+		printf("dont know what to do %s %d\n", __FILE__, __LINE__);
 
 	return 0;
 }

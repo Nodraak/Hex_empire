@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 19:52:03
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 20:40:41
+* @Last Modified time: 2014-04-06 21:30:58
 */
 
 #include "ft_game.h"
@@ -54,12 +54,14 @@ void ft_game_player_turn_end(t_game *game, t_player player)
 		{
 			if (game->map[j][i].owner == player)
 			{
-				game->map[j][i].units += 5;
+				if (game->map[j][i].type == TILE_TOWN)
+					game->map[j][i].units += 5;
+				if (game->map[j][i].type == TILE_CAPITAL)
+					game->map[j][i].units += 10;
 			}
 		}
 	}
 }
-
 
 
 
