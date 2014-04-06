@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:01
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 18:27:07
+* @Last Modified time: 2014-04-07 00:07:00
 */
 
 
@@ -132,5 +132,6 @@ void ft_sdl_text_blit(SDL_Renderer *ren, TTF_Font *font, char *text, int x, int 
 	ft_sdl_texture_blit(ren, tex, x, y);
 
 	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(tex);
 }
 
