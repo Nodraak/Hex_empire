@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:39:44
+* @Last Modified time: 2014-04-07 14:31:20
 */
 
 #ifndef CONSTANTES_H
@@ -57,7 +57,8 @@ typedef enum		e_player
 	OWNER_PLAYER_1,
 	OWNER_PLAYER_2,
 	OWNER_PLAYER_3,
-	OWNER_PLAYER_4
+	OWNER_PLAYER_4,
+	OWNER_PLAYER_LAST
 }					t_player;
 
 typedef enum		e_align
@@ -65,6 +66,15 @@ typedef enum		e_align
 	ALIGN_NONE,
 	ALIGN_CENTER
 }					t_align;
+
+typedef enum		e_dir
+{
+	DIR_UP,
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT,
+	DIR_LAST
+}					t_dir;
 
 /************
  *  STRUCT  *
@@ -117,6 +127,9 @@ typedef struct		s_game
 	int 			quitGame;
 }					t_game;
 
+/*  */
+
+extern Uint8 playerColors[OWNER_PLAYER_LAST][3];
 
 
 /* notes

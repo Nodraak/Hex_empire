@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 11:34:40
+* @Last Modified time: 2014-04-07 14:03:40
 */
 
 #include "ft_tile.h"
@@ -20,18 +20,15 @@ void ft_tile_selected_update(t_game *game)
 
 		if (dx*dx + dy*dy <= 2*2)
 		{
-			int ret = ft_tile_move(&game->map[game->selected.y][game->selected.x],
-							&game->map[game->mouse.y/50][game->mouse.x/50],
-							OWNER_PLAYER_1);
 			// move succesfully
-			if (ret == 2)
+			if (ft_tile_move(&game->map[game->selected.y][game->selected.x],
+							&game->map[game->mouse.y/50][game->mouse.x/50],
+							OWNER_PLAYER_1))
 				ft_tile_surroundings_try_conquer(game, game->mouse.x/50, game->mouse.y/50, OWNER_PLAYER_1);
+			
 			// move but perhaps failed in conquering new tile
-			if (ret)
-			{
-				game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
-				game->currentPlayerMovesLeft--;
-			}
+			game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
+			game->currentPlayerMovesLeft--;
 		}
 
 		game->isATileSelected = 0;
@@ -64,7 +61,7 @@ int ft_tile_is_able_to_move(t_game *game, int oldX, int oldY, int newX, int newY
 	*/
 	if ((oldX != newX || oldY != newY)
 		&& game->map[oldY][oldX].owner == player
-		&& game->map[oldY][oldX].units != 0
+		&& game->map[oldY][oldX].units > 0
 		&& game->currentPlayerMovesLeft > 0
 		&& game->map[oldY][oldX].lastMove < game->turn
 		&& oldX >= 0 && oldX < NB_TILE_X && oldY >= 0 && oldY < NB_TILE_Y
@@ -131,10 +128,10 @@ int ft_tile_move(t_tile *old, t_tile *new, t_player player)
 			old->units --;
 		}
 
-		return 2;
+		return 1;
 	}
 	// attack
-	else if (new->owner != player && new->owner != OWNER_NONE)
+	else
 	{
 		// attack win
 		if (old->units > new->units)
@@ -143,7 +140,7 @@ int ft_tile_move(t_tile *old, t_tile *new, t_player player)
 			new->units = old->units - new->units;
 			old->units = 0;
 
-			return 2;
+			return 1;
 		}
 		// attack lost
 		else
@@ -151,11 +148,34 @@ int ft_tile_move(t_tile *old, t_tile *new, t_player player)
 			new->units -= old->units;
 			old->units = 0;
 
-			return 1;
+			return 0;
 		}
 	}
-	else
-		printf("dont know what to do %s %d\n", __FILE__, __LINE__);
+}
+
+int ft_tile_is_in_surroundings(t_tile map[NB_TILE_Y][NB_TILE_X], int x, int y, t_tile_type tile)
+{
+	// up line
+	if (map[y-1][x-1].type == tile)
+		return 1;
+	if (map[y-1][x].type == tile)
+		return 1;
+	if (map[y-1][x+1].type == tile)
+		return 1;
+
+	// left and right
+	if (map[y][x-1].type == tile)
+		return 1;
+	if (map[y][x+1].type == tile)
+		return 1;
+
+	// down line
+	if (map[y+1][x-1].type == tile)
+		return 1;
+	if (map[y+1][x].type == tile)
+		return 1;
+	if (map[y+1][x+1].type == tile)
+		return 1;
 
 	return 0;
 }
@@ -185,25 +205,17 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	}
 
 	/* owner */
-	if (tile->owner == OWNER_PLAYER_1)
+	t_player i;
+
+	for (i = OWNER_PLAYER_1; i < OWNER_PLAYER_LAST; ++i)
 	{
-		SDL_SetTextureColorMod(data->mask, 0, 0, 128); // blue
-		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
-	}
-	if (tile->owner == OWNER_PLAYER_2)
-	{
-		SDL_SetTextureColorMod(data->mask, 128, 0, 0); // red
-		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
-	}
-	if (tile->owner == OWNER_PLAYER_3)
-	{
-		SDL_SetTextureColorMod(data->mask, 200, 200, 0); // yellow
-		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
-	}
-	if (tile->owner == OWNER_PLAYER_4)
-	{
-		SDL_SetTextureColorMod(data->mask, 128, 0, 128); // magenta
-		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
+		if (tile->owner == i)
+		{
+			SDL_SetTextureColorMod(data->mask, playerColors[i][0],
+												playerColors[i][1],
+												playerColors[i][2]);
+			ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
+		}
 	}
 
 	/* nb units */

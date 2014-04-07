@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:51:17
+* @Last Modified time: 2014-04-07 13:42:48
 */
 
 #include <stdlib.h>
@@ -17,6 +17,58 @@
 #include "ft_ia.h"
 
 #include <time.h>
+
+
+Uint8 playerColors[OWNER_PLAYER_LAST][3] = {
+	{0, 0, 0},
+	{0, 0, 128},
+	{128, 0, 0},
+	{200, 200, 0},
+	{128, 0, 128},
+};
+
+void ft_cleanup(t_sdl *sdl, t_data *data);
+void ft_timer(void);
+
+void ft_cleanup(t_sdl *sdl, t_data *data)
+{
+	TTF_CloseFont(data->font);
+	TTF_Quit();
+
+	IMG_Quit();
+
+	SDL_DestroyTexture(data->green);
+	SDL_DestroyTexture(data->blue);
+	SDL_DestroyTexture(data->brown);
+	SDL_DestroyTexture(data->mask);
+
+	SDL_DestroyRenderer(sdl->ren);
+	SDL_DestroyWindow(sdl->win);
+	SDL_Quit();
+}
+
+void ft_timer(void)
+{
+	static unsigned int timer = 0;
+
+	if (SDL_GetTicks() - timer < 1000/FPS)
+	{		
+		#ifdef FRAME_DEBUG
+			printf("frame ok : %d ms to calc\n", SDL_GetTicks()-timer);
+		#endif
+	
+		SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
+	}
+	else
+	{
+		#ifdef FRAME_DEBUG
+			printf("frame is late : %d ms to calcs\n", SDL_GetTicks()-timer);
+		#endif
+	}
+
+	timer = SDL_GetTicks();
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -44,25 +96,7 @@ int main(int argc, char *argv[])
 
 		// next turn
 		if (game.currentPlayerMovesLeft <= 0)
-		{
-			// end human player turn
-			ft_game_player_turn_end(&game, OWNER_PLAYER_1);
-			// ia 1 = player 2 plays
-			game.currentPlayerMovesLeft = 5;
-			ft_ia_play(&game, OWNER_PLAYER_2);
-			ft_game_player_turn_end(&game, OWNER_PLAYER_2);
-			// ia 2 = player 3 plays
-			game.currentPlayerMovesLeft = 5;
-			ft_ia_play(&game, OWNER_PLAYER_3);
-			ft_game_player_turn_end(&game, OWNER_PLAYER_3);
-			// ia 3 = player 4 plays
-			game.currentPlayerMovesLeft = 5;
-			ft_ia_play(&game, OWNER_PLAYER_4);
-			ft_game_player_turn_end(&game, OWNER_PLAYER_4);
-
-			game.turn++;
-			game.currentPlayerMovesLeft = 5;
-		}
+			ft_game_global_turn_end(&game);
 
 		/**********
 		 *  DRAW  *
@@ -72,32 +106,10 @@ int main(int argc, char *argv[])
 		/***************
 		 *  FIXED FPS  *
 		 ***************/
-		if (SDL_GetTicks() < timer + 1000/FPS)
-		{
-			SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
-			#ifdef FRAME_DEBUG
-				printf("frame ok\n");
-			#endif
-		}
-		else
-		{
-			#ifdef FRAME_DEBUG
-				printf("frame is late\n");
-			#endif
-		}
+		ft_timer();
 	}
 
-	TTF_CloseFont(data.font);
-	TTF_Quit();
-
-	IMG_Quit();
-
-	SDL_DestroyTexture(data.green);
-	SDL_DestroyTexture(data.blue);
-	SDL_DestroyTexture(data.brown);
-	SDL_DestroyRenderer(sdl.ren);
-	SDL_DestroyWindow(sdl.win);
-	SDL_Quit();
+	ft_cleanup(&sdl, &data);
 
 	return 0;
 }

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 11:21:52
+* @Last Modified time: 2014-04-07 13:53:19
 */
 
 
@@ -19,7 +19,7 @@ void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 			/* type */
 			map[j][i].type = TILE_LAND;
 
-			if (rand()%100 < 10)
+			if (rand()%100 < 20)
 				ft_map_init_tile_type_set(map, i, j, TILE_TOWN);
 			if (rand()%100 < 5)
 				ft_map_init_tile_type_set(map, i, j, TILE_SEA);
@@ -64,7 +64,9 @@ void ft_map_init_tile_type_set(t_tile map[NB_TILE_Y][NB_TILE_X], int x, int y, t
 	if (x >= 0 && x < NB_TILE_X && y >= 0 && y < NB_TILE_Y
 		&& map[y][x].type != tile)
 	{
-		map[y][x].type = tile;
+		if (tile != TILE_TOWN
+			|| (tile == TILE_TOWN && !ft_tile_is_in_surroundings(map, x, y, TILE_TOWN)))
+			map[y][x].type = tile;
 
 		// recurs if sea - for creating oceans
 		if (tile == TILE_SEA)

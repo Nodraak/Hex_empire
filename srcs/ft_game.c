@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 19:52:03
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 11:29:36
+* @Last Modified time: 2014-04-07 13:37:24
 */
 
 #include "ft_game.h"
@@ -44,12 +44,28 @@ void ft_game_draw(t_sdl *sdl, t_data *data, t_game *game)
 	SDL_RenderPresent(sdl->ren);
 }
 
+void ft_game_global_turn_end(t_game *game)
+{
+	// end human player turn
+	ft_game_player_turn_end(game, OWNER_PLAYER_1);
+
+	t_player i;
+	for (i = OWNER_PLAYER_2; i < OWNER_PLAYER_LAST; ++i)
+	{
+		game->currentPlayerMovesLeft = 5;
+		ft_ia_play(game, i);
+		ft_game_player_turn_end(game, i);
+	}
+
+	game->turn++;
+	game->currentPlayerMovesLeft = 5;
+}
+
 void ft_game_player_turn_end(t_game *game, t_player player)
 {
 	int i, j;
-	int nbTilesOwned = 0;
-	int nbTownsOwned = 0;
-	int bonus;
+	int nbTilesOwned = 0, nbTownsOwned = 0;
+	int bonus = 0;
 
 	// count nb tiles and towns owned by the player
 	for (i = 0; i < NB_TILE_X; ++i)
@@ -65,7 +81,8 @@ void ft_game_player_turn_end(t_game *game, t_player player)
 		}
 	}
 
-	bonus = (nbTilesOwned/4) / nbTownsOwned; // 1 unit bonus each 4 tiles
+	if (nbTownsOwned != 0)
+		bonus = (nbTilesOwned/5) / nbTownsOwned; // 1 bonus unit each 5 tiles owned
 
 	for (i = 0; i < NB_TILE_X; ++i)
 	{
