@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:48:15
+* @Last Modified time: 2014-04-07 11:21:52
 */
 
 
@@ -35,7 +35,7 @@ void ft_map_init(t_tile map[NB_TILE_Y][NB_TILE_X])
 			map[j][i].units = 0;
 
 			/* last move */
-			map[j][i].lastMove = 0;
+			map[j][i].lastMove = -1;
 		}
 	}
 
@@ -96,30 +96,18 @@ void ft_map_blit(t_tile map[NB_TILE_Y][NB_TILE_X], t_sdl *sdl, t_data *data)
 }
 
 
-void ft_map_hover_blit(SDL_Renderer *ren, t_game *game)
+void ft_map_hover_blit(SDL_Renderer *ren, SDL_Texture *mask, t_game *game)
 {
-	SDL_Rect rect;
-
 	if (game->mouse.x < 800)
 	{
-		rect.x = game->mouse.x/50*50;
-		rect.y = game->mouse.y/50*50;
-		rect.w = 50;
-		rect.h = 50;
-
-		SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-		SDL_RenderDrawRect(ren, &rect);
+		SDL_SetTextureColorMod(mask, 64, 64, 64); // gray
+		ft_sdl_texture_blit(ren, mask, game->mouse.x/50*50, game->mouse.y/50*50);
 	}
 
 	if (game->isATileSelected)
 	{
-		rect.x = game->selected.x*50;
-		rect.y = game->selected.y*50;
-		rect.w = 50;
-		rect.h = 50;
-
-		SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-		SDL_RenderDrawRect(ren, &rect);
+		SDL_SetTextureColorMod(mask, 64, 64, 64); // gray
+		ft_sdl_texture_blit(ren, mask, game->selected.x*50, game->selected.y*50);
 	}
 }
 

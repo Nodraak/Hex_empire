@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-06 22:41:57
+* @Last Modified time: 2014-04-07 11:34:40
 */
 
 #include "ft_tile.h"
@@ -125,8 +125,11 @@ int ft_tile_move(t_tile *old, t_tile *new, t_player player)
 	if (new->owner == OWNER_NONE || new->owner == player)
 	{
 		new->owner = player;
-		new->units += old->units;
-		old->units = 0;
+		while (new->units < 99 && old->units > 0)
+		{
+			new->units ++;
+			old->units --;
+		}
 
 		return 2;
 	}
