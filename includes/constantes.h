@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 14:31:20
+* @Last Modified time: 2014-04-08 14:31:30
 */
 
 #ifndef CONSTANTES_H
@@ -24,6 +24,10 @@
 
 #define NB_TILE_X		16
 #define NB_TILE_Y		12
+
+#define t_bool			int
+#define false			0
+#define true			1
 
 //#define FRAME_DEBUG
 
