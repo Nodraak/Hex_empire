@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 16:13:26
+* @Last Modified time: 2014-04-09 22:01:23
 */
 
 #include "ft_tile.h"
@@ -10,23 +10,17 @@
 
 void ft_tile_selected_update(t_game *game)
 {
-	
 	if (game->isATileSelected == 1)
 	{
-		int dx = game->mouse.x/50 - game->selected.x;
-		int dy = game->mouse.y/50 - game->selected.y;
-
-		if (dx*dx + dy*dy <= 2*2)
+		// move 
+		if (ft_tile_move(game, game->selected.x, game->selected.y,
+						game->mouse.x/50, game->mouse.y/50,
+						OWNER_PLAYER_1, false) != -1)
 		{
-			// move 
-			if (ft_tile_move(game, game->selected.x, game->selected.y,
-							game->mouse.x/50, game->mouse.y/50,
-							OWNER_PLAYER_1, false) != -1)
-			{
-				game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
-				game->currentPlayerMovesLeft--;
-			}
+			game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
+			game->currentPlayerMovesLeft--;
 		}
+
 		game->isATileSelected = 0;
 	}
 	// select
@@ -54,6 +48,7 @@ int ft_tile_is_able_to_move(t_game *game, int oldX, int oldY, int newX, int newY
 		the old tile has not moved yet
 		the old tile is on the map
 		the new tile is on teh map
+		distance is equal or less than 2
 	*/
 	if ((oldX != newX || oldY != newY)
 		&& game->map[oldY][oldX].owner == player
@@ -61,7 +56,8 @@ int ft_tile_is_able_to_move(t_game *game, int oldX, int oldY, int newX, int newY
 		&& game->currentPlayerMovesLeft > 0
 		&& game->map[oldY][oldX].lastMove < game->turn
 		&& ft_tile_is_on_map(oldX, oldY)
-		&& ft_tile_is_on_map(newX, newY))
+		&& ft_tile_is_on_map(newX, newY)
+		&& pow(newX - oldX, 2) + pow(newY - oldY, 2) <= 2*2)
 		return 1;
 	else
 		return 0;
@@ -262,17 +258,12 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	}
 
 	/* owner */
-	t_player i;
-
-	for (i = OWNER_PLAYER_1; i < OWNER_PLAYER_LAST; ++i)
+	if (tile->owner != OWNER_NONE)
 	{
-		if (tile->owner == i)
-		{
-			SDL_SetTextureColorMod(data->mask, playerColors[i][0],
-												playerColors[i][1],
-												playerColors[i][2]);
-			ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
-		}
+		SDL_SetTextureColorMod(data->mask, playerColors[tile->owner][0],
+											playerColors[tile->owner][1],
+											playerColors[tile->owner][2]);	
+		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
 	}
 
 	/* nb units */
@@ -280,7 +271,7 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	{
 		sprintf(s, "%d", tile->units);
 
-		ft_sdl_text_blit(ren, data->font, s, tile->pos.x*50+50/2, tile->pos.y*50+50/2,
+		ft_sdl_text_blit(ren, data->font, s, blitPos.x+50/2, blitPos.y+50/2,
 							ALIGN_CENTER, ALIGN_CENTER, 0, 0, 0);
 	}
 }
