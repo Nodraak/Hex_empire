@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 13:42:48
+* @Last Modified time: 2014-04-09 14:26:48
 */
 
 #include <stdlib.h>
@@ -26,6 +26,10 @@ Uint8 playerColors[OWNER_PLAYER_LAST][3] = {
 	{200, 200, 0},
 	{128, 0, 128},
 };
+
+char *strDir[DIR_LAST] = {"up", "down", "left", "right", "none"};
+
+char *strTile[TILE_LAST] = {"land", "sea", "town", "capital"};
 
 void ft_cleanup(t_sdl *sdl, t_data *data);
 void ft_timer(void);

@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 21:54:48
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 01:22:35
+* @Last Modified time: 2014-04-09 14:24:43
 */
 
 #include "ft_ia.h"
@@ -11,43 +11,60 @@ void ft_ia_play(t_game *game, t_player player)
 {
 	int i, j;
 
+printf("\n==========\nIA PLAYER %d\n===========\n", player);
+
 	for (i = 0; i < NB_TILE_X; ++i)
 	{
 		for (j = 0; j < NB_TILE_Y; ++j)
 		{
 			if (game->map[j][i].owner == player && game->map[j][i].units > 0)
 			{
-				int max = -1;
-
+printf("NEW MOVE\n==========\n");
+				int max = 0;
+				t_dir dir = DIR_NONE;
+printf("--> simulate\n");
 				int up = ft_tile_move(game, i, j, i, j-1, player, true);
 				int down = ft_tile_move(game, i, j, i, j+1, player, true);
 				int left = ft_tile_move(game, i, j, i-1, j, player, true);
 				int right = ft_tile_move(game, i, j, i+1, j, player, true);
 
 				if (up > max)
-					max = up;
+					max = up, dir = DIR_UP;
 				if (down > max)
-					max = down;
+					max = down, dir = DIR_DOWN;
 				if (left > max)
-					max = left;
+					max = left, dir = DIR_LEFT;
 				if (right > max)
-					max = right;
+					max = right, dir = DIR_RIGHT;
+printf("--> summary\np=%d tile %d %d - up=%d down=%d left=%d right=%d\n", player, i, j, up, down, left, right);
+printf("--> real move\ndir=%s\n", strDir[dir]);
 				
-printf("p=%d - %d %d %d %d\n", player, up, down, left, right);
-
-				if (max == up)
-					ft_tile_move(game, i, j, i, j-1, player, false);
-				else if (max == down)
-					ft_tile_move(game, i, j, i, j+1, player, false);
-				else if (max == left)
-					ft_tile_move(game, i, j, i-1, j, player, false);
-				else if (max == right)
-					ft_tile_move(game, i, j, i+1, j, player, false);
+				if (max == up && ft_tile_move(game, i, j, i, j-1, player, false) != -1)
+				{
+					game->map[j-1][i].lastMove = game->turn;	
+					game->currentPlayerMovesLeft--;
+				}
+				else if (max == down && ft_tile_move(game, i, j, i, j+1, player, false) != -1)
+				{
+					game->map[j+1][i].lastMove = game->turn;	
+					game->currentPlayerMovesLeft--;
+				}
+				else if (max == left && ft_tile_move(game, i, j, i-1, j, player, false) != -1)
+				{
+					game->map[j][i-1].lastMove = game->turn;	
+					game->currentPlayerMovesLeft--;
+				}
+				else if (max == right && ft_tile_move(game, i, j, i+1, j, player, false) != -1)
+				{
+					game->map[j][i+1].lastMove = game->turn;	
+					game->currentPlayerMovesLeft--;
+				}
 				else
-					;
+					printf("no dir found, abort move\n");
 			}
 		}
-	}		
+	}
+	printf("\n\n\n");
 }
 
 

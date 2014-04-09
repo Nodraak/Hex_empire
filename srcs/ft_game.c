@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 19:52:03
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 13:37:24
+* @Last Modified time: 2014-04-09 13:37:29
 */
 
 #include "ft_game.h"
@@ -39,6 +39,9 @@ void ft_game_draw(t_sdl *sdl, t_data *data, t_game *game)
 	ft_sdl_text_blit(sdl->ren, data->font, s, 825, 50, ALIGN_NONE, ALIGN_NONE, 0, 0, 0);
 	sprintf(s, "Moves left : %d", game->currentPlayerMovesLeft);
 	ft_sdl_text_blit(sdl->ren, data->font, s, 825, 75, ALIGN_NONE, ALIGN_NONE, 0, 0, 0);
+
+	sprintf(s, "hovered tile : %d %d", game->mouse.x/50, game->mouse.y/50);
+	ft_sdl_text_blit(sdl->ren, data->font, s, 825, 100, ALIGN_NONE, ALIGN_NONE, 0, 0, 0);
 
 	// flip screen
 	SDL_RenderPresent(sdl->ren);

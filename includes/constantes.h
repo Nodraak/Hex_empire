@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-08 14:31:30
+* @Last Modified time: 2014-04-09 16:12:05
 */
 
 #ifndef CONSTANTES_H
@@ -30,6 +30,8 @@
 #define true			1
 
 //#define FRAME_DEBUG
+//#define PRINT_DEBUG
+
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	#define rmask 0xff000000;
@@ -77,6 +79,7 @@ typedef enum		e_dir
 	DIR_DOWN,
 	DIR_LEFT,
 	DIR_RIGHT,
+	DIR_NONE,
 	DIR_LAST
 }					t_dir;
 
@@ -134,7 +137,8 @@ typedef struct		s_game
 /*  */
 
 extern Uint8 playerColors[OWNER_PLAYER_LAST][3];
-
+extern char *strDir[DIR_LAST];
+extern char *strTile[TILE_LAST];
 
 /* notes
 

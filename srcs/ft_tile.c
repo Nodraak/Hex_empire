@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-08 20:36:17
+* @Last Modified time: 2014-04-09 16:13:26
 */
 
 #include "ft_tile.h"
@@ -11,9 +11,7 @@
 void ft_tile_selected_update(t_game *game)
 {
 	
-	if (ft_tile_is_able_to_move(game, game->selected.x, game->selected.y,
-								game->mouse.x/50, game->mouse.y/50, OWNER_PLAYER_1)
-		&& game->isATileSelected == 1)
+	if (game->isATileSelected == 1)
 	{
 		int dx = game->mouse.x/50 - game->selected.x;
 		int dy = game->mouse.y/50 - game->selected.y;
@@ -21,14 +19,14 @@ void ft_tile_selected_update(t_game *game)
 		if (dx*dx + dy*dy <= 2*2)
 		{
 			// move 
-			ft_tile_move(game, game->selected.x, game->selected.y,
+			if (ft_tile_move(game, game->selected.x, game->selected.y,
 							game->mouse.x/50, game->mouse.y/50,
-							OWNER_PLAYER_1, false);
-			
-			game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
-			game->currentPlayerMovesLeft--;
+							OWNER_PLAYER_1, false) != -1)
+			{
+				game->map[game->mouse.y/50][game->mouse.x/50].lastMove = game->turn;	
+				game->currentPlayerMovesLeft--;
+			}
 		}
-
 		game->isATileSelected = 0;
 	}
 	// select
@@ -85,86 +83,39 @@ int ft_tile_is_on_map(int x, int y)
 	return (x >= 0 && x < NB_TILE_X && y >= 0 && y < NB_TILE_Y);
 }
 
-int ft_tile_surroundings_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate)
+int ft_tile_surroundings_one_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate)
+{
+	int score = 0;
+
+	if (ft_tile_is_able_to_be_annexed(game, x, y))
+	{
+		if (game->map[y][x].owner != player)
+			score += ft_tile_score_get(game->map[y][x].type);
+
+		if (!simulate)
+			game->map[y][x].owner = player;
+	}
+
+	return score;
+}
+
+int ft_tile_surroundings_all_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate)
 {
 	int score = 0;
 
 	// up line
-	if (ft_tile_is_able_to_be_annexed(game, x-1, y-1))
-	{
-		if (game->map[y-1][x-1].owner != player)
-			score += ft_tile_score_get(game->map[y-1][x-1].type);
-
-		if (!simulate)
-			game->map[y-1][x-1].owner = player;
-	}
-	if (ft_tile_is_able_to_be_annexed(game, x, y-1))
-	{
-		if (game->map[y-1][x].owner != player)
-			score += ft_tile_score_get(game->map[y-1][x].type);
-
-		if (!simulate)
-			game->map[y-1][x].owner = player;
-		score += ft_tile_score_get(game->map[y-1][x].type);
-	}
-
-	if (ft_tile_is_able_to_be_annexed(game, x+1, y-1))
-	{
-		if (game->map[y-1][x+1].owner != player)
-			score += ft_tile_score_get(game->map[y-1][x+1].type);
-
-		if (!simulate)
-			game->map[y-1][x+1].owner = player;
-		score += ft_tile_score_get(game->map[y-1][x+1].type);
-	}
+	score += ft_tile_surroundings_one_try_annexe(game, x-1, y-1, player, simulate);
+	score += ft_tile_surroundings_one_try_annexe(game, x, y-1, player, simulate);
+	score += ft_tile_surroundings_one_try_annexe(game, x+1, y-1, player, simulate);
 
 	// left and right
-	if (ft_tile_is_able_to_be_annexed(game, x-1, y))
-	{
-		if (game->map[y][x-1].owner != player)
-			score += ft_tile_score_get(game->map[y][x-1].type);
-
-		if (!simulate)
-			game->map[y][x-1].owner = player;
-		score += ft_tile_score_get(game->map[y][x-1].type);
-	}
-	if (ft_tile_is_able_to_be_annexed(game, x+1, y))
-	{
-		if (game->map[y][x+1].owner != player)
-			score += ft_tile_score_get(game->map[y][x+1].type);
-
-		if (!simulate)
-			game->map[y][x+1].owner = player;
-		score += ft_tile_score_get(game->map[y][x+1].type);
-	}
+	score += ft_tile_surroundings_one_try_annexe(game, x-1, y, player, simulate);
+	score += ft_tile_surroundings_one_try_annexe(game, x+1, y, player, simulate);
 
 	// down line
-	if (ft_tile_is_able_to_be_annexed(game, x-1, y+1))
-	{
-		if (game->map[y+1][x-1].owner != player)
-			score += ft_tile_score_get(game->map[y-1][x-1].type);
-
-		if (!simulate)
-			game->map[y+1][x-1].owner = player;
-		score += ft_tile_score_get(game->map[y+1][x-1].type);
-	}
-	if (ft_tile_is_able_to_be_annexed(game, x, y+1))
-	{
-		if (game->map[y+1][x].owner != player)
-			score += ft_tile_score_get(game->map[y+1][x].type);
-
-		if (!simulate)
-			game->map[y+1][x].owner = player;
-		score += ft_tile_score_get(game->map[y+1][x].type);
-	}
-	if (ft_tile_is_able_to_be_annexed(game, x+1, y+1))
-	{
-		if (game->map[y+1][x+1].owner != player)
-			score += ft_tile_score_get(game->map[y+1][x+1].type);
-
-		if (!simulate)
-			game->map[y+1][x+1].owner = player;
-	}
+	score += ft_tile_surroundings_one_try_annexe(game, x-1, y+1, player, simulate);
+	score += ft_tile_surroundings_one_try_annexe(game, x, y+1, player, simulate);
+	score += ft_tile_surroundings_one_try_annexe(game, x+1, y+1, player, simulate);
 
 	return score;
 }
@@ -175,8 +126,9 @@ int ft_tile_move(t_game *game, int srcx, int srcy, int destx, int desty, t_playe
 	int success = 0;
 	t_tile *old = &game->map[srcy][srcx];
 	t_tile *new = &game->map[desty][destx];
+	t_player newOwner = new->owner;
 
-	if (!ft_tile_is_on_map(srcx, srcy) || !ft_tile_is_on_map(destx, desty))
+	if (!ft_tile_is_able_to_move(game, srcx, srcy, destx, desty, player))
 		return -1;
 
 	// conquer new land or move unit
@@ -219,11 +171,16 @@ int ft_tile_move(t_game *game, int srcx, int srcy, int destx, int desty, t_playe
 		}
 	}
 
+	int ret = 0;
+
 	if (success)
-		return ft_tile_score_get(new->type)
-				+ ft_tile_surroundings_try_annexe(game, destx, desty, player, simulate);
-	else
-		return 0;
+	{
+		if (newOwner != player)
+			ret += ft_tile_score_get(new->type);
+		ret += ft_tile_surroundings_all_try_annexe(game, destx, desty, player, simulate);	
+	}
+
+	return ret;
 }
 
 int ft_tile_score_get(t_tile_type tile)

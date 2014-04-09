@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:36:04
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-08 19:31:43
+* @Last Modified time: 2014-04-09 16:12:45
 */
 
 #ifndef TILE_H
@@ -16,7 +16,9 @@ void ft_tile_selected_update(t_game *game);
 
 int ft_tile_is_able_to_move(t_game *game, int oldX, int oldY, int newX, int newY, t_player player);
 int ft_tile_is_able_to_be_annexed(t_game *game, int x, int y);
-int ft_tile_surroundings_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate);
+
+int ft_tile_surroundings_one_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate);
+int ft_tile_surroundings_all_try_annexe(t_game *game, int x, int y, t_player player, t_bool simulate);
 
 int ft_tile_is_on_map(int x, int y);
 
