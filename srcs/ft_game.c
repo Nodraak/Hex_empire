@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-06 19:52:03
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 13:37:29
+* @Last Modified time: 2014-04-10 12:09:22
 */
 
 #include "ft_game.h"
@@ -32,7 +32,7 @@ void ft_game_draw(t_sdl *sdl, t_data *data, t_game *game)
 	SDL_RenderFillRect(sdl->ren, &sdl->winRect);
 	// draw tiles
 	ft_map_blit(game->map, sdl, data);
-	ft_map_hover_blit(sdl->ren, data->mask, game);
+	ft_map_hover_blit(sdl->ren, data->hover, game);
 	// draw stuff : movess left
 	char s[1024];
 	sprintf(s, "%c Turn : %d", 123, game->turn);
@@ -42,6 +42,8 @@ void ft_game_draw(t_sdl *sdl, t_data *data, t_game *game)
 
 	sprintf(s, "hovered tile : %d %d", game->mouse.x/50, game->mouse.y/50);
 	ft_sdl_text_blit(sdl->ren, data->font, s, 825, 100, ALIGN_NONE, ALIGN_NONE, 0, 0, 0);
+	sprintf(s, "    owner : %d", game->map[game->mouse.y/50][game->mouse.x/50].owner);
+	ft_sdl_text_blit(sdl->ren, data->font, s, 825, 125, ALIGN_NONE, ALIGN_NONE, 0, 0, 0);
 
 	// flip screen
 	SDL_RenderPresent(sdl->ren);

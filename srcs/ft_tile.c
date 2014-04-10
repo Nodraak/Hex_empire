@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 22:01:23
+* @Last Modified time: 2014-04-10 14:09:23
 */
 
 #include "ft_tile.h"
@@ -239,32 +239,10 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	t_vector blitPos = {tile->pos.x*50, tile->pos.y*50};
 
 	/* tile background */
-	switch (tile->type)
-	{
-		case TILE_SEA:
-			ft_sdl_texture_blit(ren, data->blue, blitPos.x, blitPos.y);
-			break;
-		case TILE_TOWN:
-		case TILE_CAPITAL:
-			ft_sdl_texture_blit(ren, data->brown, blitPos.x, blitPos.y);
-			break;
-		case TILE_LAND:
-			ft_sdl_texture_blit(ren, data->green, blitPos.x, blitPos.y);
-			break;
-
-		default:
-			printf("Erreur switch : case not handled. %s %d\n", __FILE__, __LINE__);
-			break;
-	}
-
-	/* owner */
-	if (tile->owner != OWNER_NONE)
-	{
-		SDL_SetTextureColorMod(data->mask, playerColors[tile->owner][0],
-											playerColors[tile->owner][1],
-											playerColors[tile->owner][2]);	
-		ft_sdl_texture_blit(ren, data->mask, blitPos.x, blitPos.y);
-	}
+	if (tile->type >= TILE_LAST)
+		printf("Erreur ft_tile_blit() : unknown id %d. %s %d\n", tile->type, __FILE__, __LINE__);
+	else
+		ft_sdl_texture_blit(ren, data->tile[tile->type], blitPos.x, blitPos.y);
 
 	/* nb units */
 	if (tile->units != 0)
@@ -276,4 +254,36 @@ void ft_tile_blit(SDL_Renderer *ren, t_data *data, t_tile *tile)
 	}
 }
 
+int ft_tile_need_edge(t_tile map[NB_TILE_Y][NB_TILE_X], int x, int y, t_dir dir)
+{
+	int destx = x, desty = y;
 
+	if (dir == DIR_UP)
+		desty--;
+	else if (dir == DIR_DOWN)
+		desty++;
+	else if (dir == DIR_LEFT)
+		destx--;
+	else if (dir == DIR_RIGHT)
+		destx++;
+	else
+		printf("Erreur ft_tile_need_edge() : unknown dir %d=%s. %s %d\n", dir, strDir[dir], __FILE__, __LINE__);
+
+	if (ft_tile_is_on_map(x, x)
+		&& map[y][x].owner != map[desty][destx].owner
+		&& map[y][x ].owner != OWNER_NONE)
+		return 1;
+	else
+		return 0;
+}
+
+void ft_tile_owner_blit(SDL_Renderer *ren, t_data *data, t_tile *tile, t_dir dir)
+{
+	t_vector blitPos = {tile->pos.x*50, tile->pos.y*50};
+
+	SDL_SetTextureColorMod(data->edge[dir], playerColors[tile->owner][0],
+										playerColors[tile->owner][1],
+										playerColors[tile->owner][2]);
+	SDL_SetTextureAlphaMod(data->edge[dir], 192);
+	ft_sdl_texture_blit(ren, data->edge[dir], blitPos.x, blitPos.y);
+}

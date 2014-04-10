@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 22:00:00
+* @Last Modified time: 2014-04-10 12:13:00
 */
 
 #include <stdlib.h>
@@ -41,10 +41,17 @@ void ft_cleanup(t_sdl *sdl, t_data *data)
 
 	IMG_Quit();
 
-	SDL_DestroyTexture(data->green);
-	SDL_DestroyTexture(data->blue);
-	SDL_DestroyTexture(data->brown);
-	SDL_DestroyTexture(data->mask);
+	SDL_DestroyTexture(data->tile[TILE_LAND]);
+	SDL_DestroyTexture(data->tile[TILE_SEA]);
+	SDL_DestroyTexture(data->tile[TILE_TOWN]);
+	SDL_DestroyTexture(data->tile[TILE_CAPITAL]);
+
+	int i;
+	for (i = 0; i < DIR_LAST; ++i)
+		SDL_DestroyTexture(data->edge[i]);
+
+	SDL_DestroyTexture(data->hover);
+	SDL_DestroyTexture(data->enabled);
 
 	SDL_DestroyRenderer(sdl->ren);
 	SDL_DestroyWindow(sdl->win);

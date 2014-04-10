@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 17:47:09
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 21:57:36
+* @Last Modified time: 2014-04-10 12:24:54
 */
 
 
@@ -82,6 +82,13 @@ void ft_map_blit(t_tile map[NB_TILE_Y][NB_TILE_X], t_sdl *sdl, t_data *data)
 		for (i = 0; i < NB_TILE_X; ++i)
 		{
 			ft_tile_blit(sdl->ren, data, &map[j][i]);
+
+			t_dir dir;
+			for (dir = 0; dir < DIR_NONE; dir++)
+			{
+				if (ft_tile_need_edge(map, i, j, dir))
+					ft_tile_owner_blit(sdl->ren, data, &map[j][i], dir);
+			}
 		}
 	}
 }

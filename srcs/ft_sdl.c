@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:01
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-07 00:07:00
+* @Last Modified time: 2014-04-10 12:12:50
 */
 
 
@@ -56,7 +56,7 @@ void ft_sdl_init(t_sdl *sdl)
 }
 
 
-SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren)
+SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren, int numClockwiseTurns)
 {
 	SDL_Surface *ptr = NULL;
 	SDL_Texture *tex = NULL;
@@ -66,6 +66,16 @@ SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren)
 	{
 		fprintf(stderr, "Error IMG_Load() for file %s in file %s line %d : %s\n", path, __FILE__, __LINE__, SDL_GetError());
 		exit(EXIT_FAILURE);
+	}
+
+	if (numClockwiseTurns)
+	{
+		ptr = rotateSurface90Degrees(ptr, numClockwiseTurns);
+		if (ptr == NULL)
+		{
+			fprintf(stderr, "Error IMG_Load() for file %s in file %s line %d : %s\n", path, __FILE__, __LINE__, SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	tex = SDL_CreateTextureFromSurface(ren, ptr);
@@ -81,11 +91,18 @@ SDL_Texture *ft_sdl_tex_load(char *path, SDL_Renderer *ren)
 
 void ft_sdl_data_load(t_sdl *sdl, t_data *data)
 {
-	data->green = ft_sdl_tex_load("data/green.png", sdl->ren);
-	data->blue = ft_sdl_tex_load("data/blue.png", sdl->ren);
-	data->brown = ft_sdl_tex_load("data/brown.png", sdl->ren);
-	data->mask = ft_sdl_tex_load("data/mask.png", sdl->ren);
+	data->tile[TILE_LAND] = ft_sdl_tex_load("data/land.png", sdl->ren, 0);
+	data->tile[TILE_SEA] = ft_sdl_tex_load("data/sea.png", sdl->ren, 0);
+	data->tile[TILE_TOWN] = ft_sdl_tex_load("data/town.png", sdl->ren, 0);
+	data->tile[TILE_CAPITAL] = ft_sdl_tex_load("data/capital.png", sdl->ren, 0);
 
+	int i;
+	for (i = 0; i < DIR_LAST; ++i)
+		data->edge[i] = ft_sdl_tex_load("data/edge.png", sdl->ren, i);
+
+	data->hover = ft_sdl_tex_load("data/hover.png", sdl->ren, 0);
+	data->enabled = ft_sdl_tex_load("data/hover2.png", sdl->ren, 0);
+	
 	data->font = TTF_OpenFont("data/Furmanite.ttf", 20);
  	if (data->font == NULL)
  	{

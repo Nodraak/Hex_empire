@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:06:20
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-09 16:12:05
+* @Last Modified time: 2014-04-10 12:11:37
 */
 
 #ifndef CONSTANTES_H
@@ -76,9 +76,9 @@ typedef enum		e_align
 typedef enum		e_dir
 {
 	DIR_UP,
+	DIR_RIGHT,
 	DIR_DOWN,
 	DIR_LEFT,
-	DIR_RIGHT,
 	DIR_NONE,
 	DIR_LAST
 }					t_dir;
@@ -97,10 +97,12 @@ typedef struct 		s_sdl
 /* sprites */
 typedef struct 		s_data
 {
-	SDL_Texture		*green;
-	SDL_Texture		*blue;
-	SDL_Texture		*brown;
-	SDL_Texture		*mask;
+	SDL_Texture		*tile[TILE_LAST];
+
+	SDL_Texture		*edge[DIR_LAST];
+	
+	SDL_Texture		*hover;
+	SDL_Texture		*enabled;
 
 	TTF_Font		*font;
 }					t_data;
