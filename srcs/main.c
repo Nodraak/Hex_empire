@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 14:03:07
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-10 12:13:00
+* @Last Modified time: 2014-04-12 18:56:14
 */
 
 #include <stdlib.h>
@@ -63,11 +63,11 @@ void ft_timer(void)
 	static unsigned int timer = 0;
 
 	if (SDL_GetTicks() - timer < 1000/FPS)
-	{		
+	{
 		#ifdef FRAME_DEBUG
 			printf("frame ok : %d ms to calc\n", SDL_GetTicks()-timer);
 		#endif
-	
+
 		SDL_Delay(1000/FPS-(SDL_GetTicks()-timer));
 	}
 	else

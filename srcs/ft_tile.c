@@ -2,7 +2,7 @@
 * @Author: Adrien Chardon
 * @Date:   2014-04-05 18:35:55
 * @Last Modified by:   Adrien Chardon
-* @Last Modified time: 2014-04-10 14:09:23
+* @Last Modified time: 2014-04-12 18:56:00
 */
 
 #include "ft_tile.h"
@@ -269,9 +269,9 @@ int ft_tile_need_edge(t_tile map[NB_TILE_Y][NB_TILE_X], int x, int y, t_dir dir)
 	else
 		printf("Erreur ft_tile_need_edge() : unknown dir %d=%s. %s %d\n", dir, strDir[dir], __FILE__, __LINE__);
 
-	if (ft_tile_is_on_map(x, x)
+	if (ft_tile_is_on_map(x, y)
 		&& map[y][x].owner != map[desty][destx].owner
-		&& map[y][x ].owner != OWNER_NONE)
+		&& map[y][x].owner != OWNER_NONE)
 		return 1;
 	else
 		return 0;
